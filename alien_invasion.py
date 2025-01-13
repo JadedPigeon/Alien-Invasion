@@ -4,6 +4,7 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -18,9 +19,16 @@ class AlienInvasion:
         self.clock = pygame.time.Clock()
         self.settings = Settings()
 
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-        self.settings.screen_width = self.screen.get_rect().width
-        self.settings.screen_height = self.screen.get_rect().height
+        """Screen Settings"""
+        # Uncomment below for full screen
+        #self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        #self.settings.screen_width = self.screen.get_rect().width
+        #self.settings.screen_height = self.screen.get_rect().height
+
+        # Uncomment below for windowed screen
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+        """End Screen Settings"""
+
         pygame.display.set_caption("Alien Invasion")
 
         # Create an instance to store game statistics
@@ -32,8 +40,11 @@ class AlienInvasion:
 
         self._create_fleet()
 
-        # Start Alien Invasion in an active state
-        self.game_active = True
+        # Start Alien Invasion in an inactive state
+        self.game_active = False
+
+        # Make the Play button
+        self.play_button = Button(self, "Play")
 
     def run_game(self):
         """Start the main loop for the game"""
@@ -124,6 +135,11 @@ class AlienInvasion:
                  bullet.draw_bullet()
             self.ship.blitme()
             self.aliens.draw(self.screen)
+
+            # Draw the play button if the game is inactive
+            if not self.game_active:
+                 self.play_button.draw_button()
+
             pygame.display.flip()
     
     def _create_fleet(self):
